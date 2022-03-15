@@ -12,17 +12,19 @@ const Wrapper = styled.div`
   input {
     width: 30px;
     height: 30px;
-    
+
     top: 10px;
     right: 10px;
     position: absolute;
 
     opacity: 0.7;
   }
-  
+
   input:checked {
     opacity: 1.0;
   }
+
+  display: ${props => props.willShow ? "block" : "none"};
 
   position: relative;
 
@@ -39,32 +41,44 @@ const Wrapper = styled.div`
   background: ${props => props.type === 1 ? "#CCFF66" : props.type === 2 ? "#66CCCC" : "#FFCC00"}
 `
 
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
 
-  color: ${props => props.type === 1 ? "#666699" : props.type === 2 ? "#FFFFFF" : "#993366"}
-`
+const Content = styled.div
+    `
+      display: flex;
+      flex-direction: column;
 
-const PetTitle = styled.p`
-  margin: 5% 0 2% 0;
-  padding: 0 15% 0 15%;
-  font-size: 3vh;
-`
+      color: ${props => props.type === 1 ? "#666699" : props.type === 2 ? "#FFFFFF" : "#993366"}
+    `
 
-const PetDesc = styled.i`
-  padding: 0 15% 0 15%;
-`
+
+const PetTitle = styled.p
+    `
+      margin: 5% 0 2% 0;
+      padding: 0 15% 0 15%;
+      font-size: 3vh;
+    `
+
+
+const PetDesc = styled.i
+    `
+      padding: 0 15% 0 15%;
+    `
+
 
 class PetCard extends React.Component {
     constructor(props) {
         super(props);
+        this.checkChange = this.checkChange.bind(this)
+    }
+
+    checkChange() {
+        this.props.checkChange(this.props.index)
     }
 
     render() {
         return (
-            <Wrapper type={this.props.type}>
-                <input type="checkbox"/>
+            <Wrapper type={this.props.type} willShow={this.props.willShow}>
+                <input type="checkbox" onChange={this.checkChange}/>
                 <img src={this.props.imageUrl} alt={this.props.title}/>
                 <Content type={this.props.type}>
                     <PetTitle>{this.props.title}</PetTitle>

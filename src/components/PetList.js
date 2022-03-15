@@ -25,27 +25,58 @@ class PetList extends React.Component {
         this.state = {
             petInfo: []
         }
+        this.checked = null;
+        this.titles = null;
+        this.descs = null;
     }
 
     componentDidMount() {
         axios.get(`http://eulerity-hackathon.appspot.com/pets`)
             .then(res => {
+                const rawData = res.data
+                this.checked = rawData.map((item, i) => false)
+                this.titles = rawData.map(item => item['title'].toLowerCase())
+                this.descs = rawData.map(item => item['description'].toLowerCase())
                 this.setState({
-                    petInfo: res.data.map(item => {
-                        return {title: item["title"], desc: item["description"], url: item["url"]}
+                    petInfo: rawData.map(item => {
+                        return {title: item["title"], desc: item["description"], url: item["url"], willShow: true}
                     })
                 })
             })
     }
 
+    checkPet(index) {
+        this.checked[index] = !this.checked[index];
+    }
+
+    filterSet(text) {
+        let textLower = text.toLowerCase();
+        let willShow = []
+        for (let i = 0; i < this.titles.length; i += 1) {
+            if (this.titles[i].includes(textLower) || this.descs[i].includes(textLower)) {
+                willShow.push(true)
+            } else {
+                willShow.push(false)
+            }
+        }
+        let info = this.state.petInfo;
+        for (let i = 0; i < info.length; i += 1) {
+            info[i].willShow = willShow[i]
+        }
+        this.setState({
+            petInfo: info
+        })
+    }
+
     render() {
         return (
             <Wrapper>
-                <SearchBar/>
+                <SearchBar filterSet={text => this.filterSet(text)}/>
                 <StickyMenu/>
                 <CardList>
                     {this.state.petInfo.map((item, i) => {
-                        return <PetCard imageUrl={item.url} title={item.title} desc={item.desc} key={i} type={i % 3}/>
+                        return <PetCard imageUrl={item.url} title={item.title} desc={item.desc} willShow={item.willShow}
+                                        key={i} type={i % 3} index={i} checkChange={index => this.checkPet(index)}/>
                     })}
                 </CardList>
             </Wrapper>
