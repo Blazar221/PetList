@@ -9,21 +9,34 @@ const Wrapper = styled.div`
     object-position: center;
   }
 
+  input {
+    width: 30px;
+    height: 30px;
+    
+    top: 10px;
+    right: 10px;
+    position: absolute;
+
+    opacity: 0.7;
+  }
+  
+  input:checked {
+    opacity: 1.0;
+  }
+
+  position: relative;
+
   overflow: hidden;
 
   width: 18vw;
   aspect-ratio: 0.63;
 
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  transition: 0.3s;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
   border-radius: 20px;
 
   margin: 1vw;
 
   background: ${props => props.type === 1 ? "#CCFF66" : props.type === 2 ? "#66CCCC" : "#FFCC00"}
-}
-
-;
 `
 
 const Content = styled.div`
@@ -51,6 +64,7 @@ class PetCard extends React.Component {
     render() {
         return (
             <Wrapper type={this.props.type}>
+                <input type="checkbox"/>
                 <img src={this.props.imageUrl} alt={this.props.title}/>
                 <Content type={this.props.type}>
                     <PetTitle>{this.props.title}</PetTitle>
