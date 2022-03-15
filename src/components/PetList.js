@@ -4,12 +4,15 @@ import PetCard from "./PetCard";
 import StickyMenu from "./StickyMenu";
 import SearchBar from "./SearchBar";
 import styled from "styled-components";
+import {saveAs} from "file-saver";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   background: #FF9999;
+  
+  min-height: 100%;
 `
 
 const CardList = styled.div`
@@ -27,6 +30,7 @@ class PetList extends React.Component {
         }
         this.checked = null;
         this.titles = null;
+        this.urls = null;
         this.descs = null;
     }
 
@@ -37,6 +41,7 @@ class PetList extends React.Component {
                 this.checked = rawData.map((item, i) => false)
                 this.titles = rawData.map(item => item['title'].toLowerCase())
                 this.descs = rawData.map(item => item['description'].toLowerCase())
+                this.urls = rawData.map(item => item['url'])
                 this.setState({
                     petInfo: rawData.map(item => {
                         return {
@@ -84,6 +89,7 @@ class PetList extends React.Component {
         let info = [...this.state.petInfo]
         for (let i = 0; i < info.length; i += 1) {
             info[i].isChecked = true
+            this.checked[i] = true
         }
 
         this.setState({
@@ -95,6 +101,7 @@ class PetList extends React.Component {
         let info = [...this.state.petInfo]
         for (let i = 0; i < info.length; i += 1) {
             info[i].isChecked = false
+            this.checked[i] = false
         }
 
         this.setState({
@@ -102,12 +109,21 @@ class PetList extends React.Component {
         })
     }
 
+    downloadImages() {
+        for (let i = 0; i < this.checked.length; i += 1) {
+            if (this.checked[i]) {
+                saveAs(this.urls[i], "pet" + i + ".png")
+            }
+        }
+    }
+
     render() {
-        console.log("renderList")
+        //console.log("renderList")
         return (
             <Wrapper>
                 <SearchBar filterSet={text => this.filterSet(text)}/>
-                <StickyMenu selectAll={() => this.selectAll()} clearAll={()=>this.clearAll()}/>
+                <StickyMenu selectAll={() => this.selectAll()} clearAll={() => this.clearAll()}
+                            downloadImage={() => this.downloadImages()}/>
                 <CardList>
                     {this.state.petInfo.map((item, i) => {
                         return <PetCard imageUrl={item.url} title={item.title} desc={item.desc} willShow={item.willShow}

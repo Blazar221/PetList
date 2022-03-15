@@ -28,6 +28,7 @@ const Button = styled.button`
 class StickyMenu extends React.Component {
     constructor(props) {
         super(props);
+        this.downloadFunc = this.downloadFunc.bind(this);
         this.selectAllFunc = this.selectAllFunc.bind(this);
         this.clearAllFunc = this.clearAllFunc.bind(this)
     }
@@ -40,9 +41,13 @@ class StickyMenu extends React.Component {
         this.props.clearAll()
     }
 
+    downloadFunc() {
+        this.props.downloadImage()
+    }
+
     render() {
         return <Wrapper>
-            <Button type="download" title="download"/>
+            <Button type="download" title="download" onClick={this.downloadFunc}/>
             <Button type="selectAll" title="selectAll" onClick={this.selectAllFunc}/>
             <Button type="clearAll" title="clearAll" onClick={this.clearAllFunc}/>
         </Wrapper>

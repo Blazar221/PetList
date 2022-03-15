@@ -55,7 +55,7 @@ const PetTitle = styled.p
     `
       margin: 5% 0 2% 0;
       padding: 0 15% 0 15%;
-      font-size: 3vh;
+      font-size: 20px;
     `
 
 

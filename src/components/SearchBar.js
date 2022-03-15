@@ -3,12 +3,14 @@ import styled from "styled-components";
 
 const Wrapper = styled.div`
   width: 40vw;
-  height: 40px;
+  height: 50px;
   display: flex;
   justify-content: center;
+  
+  margin-bottom: 10px;
 
   input {
-    margin: 10px 0 2px 0;
+    margin: 6px 0 6px 0;
     width: 90%;
   }
 `
