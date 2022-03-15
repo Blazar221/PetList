@@ -28,13 +28,23 @@ const Button = styled.button`
 class StickyMenu extends React.Component {
     constructor(props) {
         super(props);
+        this.selectAllFunc = this.selectAllFunc.bind(this);
+        this.clearAllFunc = this.clearAllFunc.bind(this)
+    }
+
+    selectAllFunc() {
+        this.props.selectAll()
+    }
+
+    clearAllFunc() {
+        this.props.clearAll()
     }
 
     render() {
         return <Wrapper>
             <Button type="download" title="download"/>
-            <Button type="selectAll" title="selectAll"/>
-            <Button type="clearAll" title="clearAll"/>
+            <Button type="selectAll" title="selectAll" onClick={this.selectAllFunc}/>
+            <Button type="clearAll" title="clearAll" onClick={this.clearAllFunc}/>
         </Wrapper>
     }
 

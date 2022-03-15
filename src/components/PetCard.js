@@ -71,14 +71,20 @@ class PetCard extends React.Component {
         this.checkChange = this.checkChange.bind(this)
     }
 
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        return this.props.isChecked !== nextProps.isChecked || this.props.willShow !== nextProps.willShow;
+    }
+
     checkChange() {
         this.props.checkChange(this.props.index)
     }
 
     render() {
+        //console.log("renderCard");
+        //console.log(this.props.isChecked)
         return (
             <Wrapper type={this.props.type} willShow={this.props.willShow}>
-                <input type="checkbox" onChange={this.checkChange}/>
+                <input type="checkbox" onChange={this.checkChange} checked={this.props.isChecked}/>
                 <img src={this.props.imageUrl} alt={this.props.title}/>
                 <Content type={this.props.type}>
                     <PetTitle>{this.props.title}</PetTitle>

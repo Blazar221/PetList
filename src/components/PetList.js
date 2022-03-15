@@ -39,7 +39,13 @@ class PetList extends React.Component {
                 this.descs = rawData.map(item => item['description'].toLowerCase())
                 this.setState({
                     petInfo: rawData.map(item => {
-                        return {title: item["title"], desc: item["description"], url: item["url"], willShow: true}
+                        return {
+                            title: item["title"],
+                            desc: item["description"],
+                            url: item["url"],
+                            willShow: true,
+                            isChecked: false
+                        }
                     })
                 })
             })
@@ -47,6 +53,12 @@ class PetList extends React.Component {
 
     checkPet(index) {
         this.checked[index] = !this.checked[index];
+        let info = [...this.state.petInfo]
+        info[index].isChecked = !info[index].isChecked
+
+        this.setState({
+            petInfo: info
+        })
     }
 
     filterSet(text) {
@@ -59,7 +71,7 @@ class PetList extends React.Component {
                 willShow.push(false)
             }
         }
-        let info = this.state.petInfo;
+        let info = [...this.state.petInfo];
         for (let i = 0; i < info.length; i += 1) {
             info[i].willShow = willShow[i]
         }
@@ -68,15 +80,39 @@ class PetList extends React.Component {
         })
     }
 
+    selectAll() {
+        let info = [...this.state.petInfo]
+        for (let i = 0; i < info.length; i += 1) {
+            info[i].isChecked = true
+        }
+
+        this.setState({
+            petInfo: info
+        })
+    }
+
+    clearAll() {
+        let info = [...this.state.petInfo]
+        for (let i = 0; i < info.length; i += 1) {
+            info[i].isChecked = false
+        }
+
+        this.setState({
+            petInfo: info
+        })
+    }
+
     render() {
+        console.log("renderList")
         return (
             <Wrapper>
                 <SearchBar filterSet={text => this.filterSet(text)}/>
-                <StickyMenu/>
+                <StickyMenu selectAll={() => this.selectAll()} clearAll={()=>this.clearAll()}/>
                 <CardList>
                     {this.state.petInfo.map((item, i) => {
                         return <PetCard imageUrl={item.url} title={item.title} desc={item.desc} willShow={item.willShow}
-                                        key={i} type={i % 3} index={i} checkChange={index => this.checkPet(index)}/>
+                                        key={i} type={i % 3} index={i} checkChange={index => this.checkPet(index)}
+                                        isChecked={item.isChecked}/>
                     })}
                 </CardList>
             </Wrapper>
