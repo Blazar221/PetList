@@ -3,25 +3,47 @@ import styled from "styled-components";
 
 const Wrapper = styled.div`
   width: 40vw;
-  height: 50px;
+  height: 45px;
   display: flex;
+  flex-direction: row;
   justify-content: center;
-  
+
+  border-radius: 20px;
+  overflow: hidden;
+
   margin-bottom: 10px;
+  padding: 0;
 
   input {
-    margin: 6px 0 6px 0;
-    width: 90%;
+    width: 86%;
+    border: 0;
+    outline: 0;
+    font-size: 30px;
+  }
+`
+
+const Button = styled.button`
+  width: 7%;
+  border: 0;
+  background: url(${props => props.type === "search" ? "./search.svg" : "./close.svg"});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: white;
+  background-size: 60% 60%;
+  &:hover {
+    opacity: 0.8;
   }
 `
 
 class SearchBar extends React.Component {
     constructor(props) {
         super(props);
-        this.filterSet = this.filterSet.bind(this)
+        this.enterFilter = this.enterFilter.bind(this)
+        this.search = this.search.bind(this)
+        this.close = this.close.bind(this)
     }
 
-    filterSet(e) {
+    enterFilter(e) {
         let keyCode = null;
         if (e.which) {
             keyCode = e.which;
@@ -33,9 +55,22 @@ class SearchBar extends React.Component {
         }
     }
 
+    search() {
+        let filterVal = document.getElementById("pet-filter").value
+        this.props.filterSet(filterVal)
+    }
+
+    close() {
+        document.getElementById("pet-filter").value = ""
+        this.props.filterSet("")
+    }
+
+
     render() {
         return <Wrapper>
-            <input type="text" onKeyPress={this.filterSet}/>
+            <Button type="search" onClick={this.search}/>
+            <input type="text" id="pet-filter" onKeyPress={this.enterFilter}/>
+            <Button type="close" onClick={this.close}/>
         </Wrapper>
     }
 

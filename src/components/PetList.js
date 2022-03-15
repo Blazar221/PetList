@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   align-items: center;
   background: #FF9999;
   
-  min-height: 100%;
+  min-height: 100vh;
 `
 
 const CardList = styled.div`
