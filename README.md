@@ -1,3 +1,3 @@
 PetList
 
-![Alt text](图片链接 "optional title")
+![Project Display](https://github.com/Blazar221/PetList/blob/main/public/readme.png)
