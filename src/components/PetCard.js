@@ -5,7 +5,7 @@ const Wrapper = styled.div`
   &:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.63);
   }
-  
+
   img {
     width: 18vw;
     aspect-ratio: 1;
@@ -89,7 +89,7 @@ class PetCard extends React.Component {
         //console.log(this.props.isChecked)
         return (
             <Wrapper type={this.props.type} willShow={this.props.willShow} onClick={this.checkChange}>
-                <input type="checkbox" onChange={this.checkChange} checked={this.props.isChecked}/>
+                <input type="checkbox" checked={this.props.isChecked}/>
                 <img src={this.props.imageUrl} alt={this.props.title}/>
                 <Content type={this.props.type}>
                     <PetTitle>{this.props.title}</PetTitle>

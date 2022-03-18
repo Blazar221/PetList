@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   background: #FF9999;
-  
+
   min-height: 100vh;
 `
 
@@ -42,90 +42,47 @@ class PetList extends React.Component {
                 this.titles = rawData.map(item => item['title'].toLowerCase())
                 this.descs = rawData.map(item => item['description'].toLowerCase())
                 this.urls = rawData.map(item => item['url'])
-                this.setState({
-                    petInfo: rawData.map(item => {
-                        return {
-                            title: item["title"],
-                            desc: item["description"],
-                            url: item["url"],
-                            willShow: true,
-                            isChecked: false
-                        }
-                    })
-                })
+                this.props.onGetData(res.data)
             })
     }
 
     checkPet(index) {
         this.checked[index] = !this.checked[index];
-        let info = [...this.state.petInfo]
-        info[index].isChecked = !info[index].isChecked
-
-        this.setState({
-            petInfo: info
-        })
-    }
-
-    filterSet(text) {
-        let textLower = text.toLowerCase();
-        let willShow = []
-        for (let i = 0; i < this.titles.length; i += 1) {
-            if (this.titles[i].includes(textLower) || this.descs[i].includes(textLower)) {
-                willShow.push(true)
-            } else {
-                willShow.push(false)
-            }
-        }
-        let info = [...this.state.petInfo];
-        for (let i = 0; i < info.length; i += 1) {
-            info[i].willShow = willShow[i]
-        }
-        this.setState({
-            petInfo: info
-        })
+        this.props.onSelect(index);
     }
 
     selectAll() {
-        let info = [...this.state.petInfo]
-        for (let i = 0; i < info.length; i += 1) {
-            info[i].isChecked = true
+        for (let i = 0; i < this.checked.length; i += 1) {
             this.checked[i] = true
         }
-
-        this.setState({
-            petInfo: info
-        })
+        this.props.onSelectAll()
     }
 
     clearAll() {
-        let info = [...this.state.petInfo]
-        for (let i = 0; i < info.length; i += 1) {
-            info[i].isChecked = false
+        for (let i = 0; i < this.checked.length; i += 1) {
             this.checked[i] = false
         }
-
-        this.setState({
-            petInfo: info
-        })
+        this.props.onClearAll()
     }
 
     downloadImages() {
         for (let i = 0; i < this.checked.length; i += 1) {
             if (this.checked[i]) {
-                saveAs(this.urls[i], "pet" + i + ".png")
+                saveAs(this.urls[i], "pet" + i + ".jpg")
             }
         }
     }
 
     render() {
         //console.log("renderList")
+        const {info, onSelectAll, onClearAll, onFilter} = this.props
         return (
             <Wrapper>
-                <SearchBar filterSet={text => this.filterSet(text)}/>
+                <SearchBar filterSet={text => onFilter(text)}/>
                 <StickyMenu selectAll={() => this.selectAll()} clearAll={() => this.clearAll()}
                             downloadImage={() => this.downloadImages()}/>
                 <CardList>
-                    {this.state.petInfo.map((item, i) => {
+                    {info.map((item, i) => {
                         return <PetCard imageUrl={item.url} title={item.title} desc={item.desc} willShow={item.willShow}
                                         key={i} type={i % 3} index={i} checkChange={index => this.checkPet(index)}
                                         isChecked={item.isChecked}/>
