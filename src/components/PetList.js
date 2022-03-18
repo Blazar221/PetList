@@ -23,68 +23,34 @@ const CardList = styled.div`
 `
 
 class PetList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            petInfo: []
-        }
-        this.checked = null;
-        this.titles = null;
-        this.urls = null;
-        this.descs = null;
-    }
 
     componentDidMount() {
         axios.get(`http://eulerity-hackathon.appspot.com/pets`)
             .then(res => {
-                const rawData = res.data
-                this.checked = rawData.map((item, i) => false)
-                this.titles = rawData.map(item => item['title'].toLowerCase())
-                this.descs = rawData.map(item => item['description'].toLowerCase())
-                this.urls = rawData.map(item => item['url'])
                 this.props.onGetData(res.data)
             })
     }
 
-    checkPet(index) {
-        this.checked[index] = !this.checked[index];
-        this.props.onSelect(index);
-    }
-
-    selectAll() {
-        for (let i = 0; i < this.checked.length; i += 1) {
-            this.checked[i] = true
-        }
-        this.props.onSelectAll()
-    }
-
-    clearAll() {
-        for (let i = 0; i < this.checked.length; i += 1) {
-            this.checked[i] = false
-        }
-        this.props.onClearAll()
-    }
-
     downloadImages() {
-        for (let i = 0; i < this.checked.length; i += 1) {
-            if (this.checked[i]) {
-                saveAs(this.urls[i], "pet" + i + ".jpg")
+        this.props.info.map((item, i) => {
+            if (item.isChecked) {
+                saveAs(item.url, "pet" + i + ".jpg")
             }
-        }
+        })
     }
 
     render() {
         //console.log("renderList")
-        const {info, onSelectAll, onClearAll, onFilter} = this.props
+        const {info, onSelect, onSelectAll, onClearAll, onFilter} = this.props
         return (
             <Wrapper>
                 <SearchBar filterSet={text => onFilter(text)}/>
-                <StickyMenu selectAll={() => this.selectAll()} clearAll={() => this.clearAll()}
+                <StickyMenu selectAll={() => onSelectAll()} clearAll={() => onClearAll()}
                             downloadImage={() => this.downloadImages()}/>
                 <CardList>
                     {info.map((item, i) => {
                         return <PetCard imageUrl={item.url} title={item.title} desc={item.desc} willShow={item.willShow}
-                                        key={i} type={i % 3} index={i} checkChange={index => this.checkPet(index)}
+                                        key={i} type={i % 3} index={i} checkChange={index => onSelect(index)}
                                         isChecked={item.isChecked}/>
                     })}
                 </CardList>
